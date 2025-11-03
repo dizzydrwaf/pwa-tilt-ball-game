@@ -29,16 +29,6 @@ document.addEventListener('visibilitychange', () => {
 // Call when game starts or permission is granted
 requestWakeLock();
 
-// a11y axe
-.run()
-.then(results => {
-  if (results.violations.length) {
-    throw new Error('Accessibility issues found');
-  }
-})
-.catch(err => {
-  console.error('Something bad happened:', err.message);
-});
 
 // game code
 const canvas = document.getElementById('gameCanvas');
