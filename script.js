@@ -1,8 +1,36 @@
+// service worker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
 }
 
+// wake lock
+let wakeLock = null;
 
+async function requestWakeLock() {
+  try {
+    wakeLock = await navigator.wakeLock.request('screen');
+    console.log('✅ Screen Wake Lock active');
+
+    wakeLock.addEventListener('release', () => {
+      console.log('❌ Wake Lock was released');
+    });
+  } catch (err) {
+    console.error(`${err.name}, ${err.message}`);
+  }
+}
+
+// Re-acquire lock if it’s lost when the page becomes visible again
+document.addEventListener('visibilitychange', () => {
+  if (wakeLock !== null && document.visibilityState === 'visible') {
+    requestWakeLock();
+  }
+});
+
+// Call when game starts or permission is granted
+requestWakeLock();
+
+
+// game code
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
