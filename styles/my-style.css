@@ -1,7 +1,8 @@
 body {
   margin: 0;
   padding: 0;
-  height: 100%;
+  height: 100vh;
+  width: 100vw;
   overflow: hidden;
   background: radial-gradient(circle at center, #1e1e1e, #000);
 }
@@ -19,7 +20,7 @@ canvas {
 h1 {
   position: relative;
   z-index: 1;
-  color: #ff1144;
+  color: #f00;
   text-align: center;
   width: 100vw;
 }
