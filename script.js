@@ -53,7 +53,7 @@ window.addEventListener('deviceorientation', (event) => {
   gamma = event.gamma; // left/right tilt (-90 to 90)
 });
 
-// Optional: ask permission for iOS
+// only needed for iphone users
 function requestPermission() {
   if (typeof DeviceOrientationEvent.requestPermission === 'function') {
     DeviceOrientationEvent.requestPermission()
@@ -67,6 +67,22 @@ function requestPermission() {
 }
 
 document.body.addEventListener('click', requestPermission, { once: true });
+
+// key reader
+
+const keys = {};
+
+window.addEventListener('keydown', (event) => {
+  keys[event.key] = true;
+});
+
+window.addEventListener('keyup', (event) => {
+  keys[event.key] = false;
+});
+
+
+
+
 
 function update() {
   // simple physics
@@ -89,6 +105,22 @@ function update() {
     ball.vy *= -0.7;
     ball.y = Math.max(ball.radius, Math.min(height - ball.radius, ball.y));
   }
+
+  //pc support
+
+  if (keys["ArrowLeft"])  ball.vx -= 10;
+  if (keys["ArrowRight"]) ball.vx += 10;
+  if (keys["ArrowUp"])    ball.vy -= 10;
+  if (keys["ArrowDown"])  ball.vy += 10;
+
+  const maxSpeed = 1000;
+  ball.vx = Math.max(-maxSpeed, Math.min(maxSpeed, ball.vx));
+  ball.vy = Math.max(-maxSpeed, Math.min(maxSpeed, ball.vy));
+
+
+
+
+
 }
 
 function draw() {
