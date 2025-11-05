@@ -23,6 +23,7 @@ h1 {
   color: #f00;
   text-align: center;
   width: 100vw;
+  text-shadow: 0 0 0.5em #ff1144;
 }
 
 /*# sourceMappingURL=my-style.css.map */
