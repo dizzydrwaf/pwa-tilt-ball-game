@@ -159,11 +159,13 @@ let particles = [];
 function restartGame() {
   ball.x = width/2;
   ball.y = height/2;
+  ball.vx = 0;
+  ball.vy = 0;
   ball.visible = true;
   coins = [];
   particles = [];
   restartbtn.style.display = "none";
-  console.log("restarting game!")
+  // console.log("restarting game!")
 }
 
 const restartbtn = document.getElementById("restartbtn");
