@@ -167,7 +167,7 @@ function restartGame() {
 }
 
 const restartbtn = document.getElementById("restartbtn");
-console.log(restartbtn)
+// console.log(restartbtn)
 
 restartbtn.addEventListener("click", restartGame)
 restartbtn.addEventListener("touchstart", restartGame)
@@ -230,13 +230,15 @@ function update() {
     }
   }
 
+  // cheching for if coin is too old to live and need to be replaced
+
   for (let i = 0; i < coins.length; i++) {
     if (coins[i].c_life_time == 500) {
       coins.splice(i, 1);
     }else {
       coins[i].c_life_time++
     }
-    console.log(coins[0].c_life_time)
+    // console.log(coins[0].c_life_time)
   }
 
 }
