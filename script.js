@@ -108,7 +108,7 @@ function spawncoin() {
     c_dy: 0,
     c_speed: Math.random() * (0.02 - 0.01) + 0.01
   };
-  const min_d = 50;
+  const min_d = 200;
 
   let distance = touching(ball, coin, "yes")
   if (distance > min_d) {
@@ -120,7 +120,7 @@ function spawncoin() {
 
 let score_multiplier = 1;
 
-let score
+let score = 0;
 
 // coin spawn timer and other timeers 
 setInterval(spawncoin, 400);
@@ -178,6 +178,8 @@ function restartGame() {
   particles = [];
   restartbtn.classList.remove("visible");
   game_paused = false;
+  score = 0;
+  score_multiplier = 0;
   // console.log("restarting game!")
 }
 
@@ -192,8 +194,11 @@ restartbtn.addEventListener("touchstart", restartGame)
 // hides restart btn
 restartbtn.classList.remove("visible");
 
-
+// game paused code
 let game_paused = false
+
+// score declaration
+const score_display = document.getElementById("scoreDisplay");
 
 
 
@@ -273,6 +278,8 @@ function update() {
       }
       // console.log(coins[0].c_life_time)
     }
+    score ++
+    score_display.textContent = score;
   }
   if (keys[" "]) restartGame();
   // console.log(game_paused)
