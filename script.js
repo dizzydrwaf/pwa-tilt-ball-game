@@ -3,6 +3,8 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
 }
 
+let lastTime = performance.now();
+
 // wake lock
 let wakeLock = null;
 
@@ -106,9 +108,13 @@ function spawncoin() {
     shadow_color: 'gold',
     c_dx: 0,
     c_dy: 0,
-    c_speed: Math.random() * (0.02 - 0.01) + 0.01
+    //c_speed: Math.random() * (0.02 - 0.01) + 0.01,
+    c_speed: Math.random() * 50 + 100,
+    vel: { x: 0, y: 0 },
   };
   const min_d = 200;
+
+	console.log(coin.c_speed);
 
   let distance = touching(ball, coin, "yes")
   if (distance > min_d) {
@@ -204,7 +210,7 @@ const score_display = document.getElementById("scoreDisplay");
 
 
 
-function update() {
+function update(dt) {
   if (game_paused == false ) {
     // simple physics
     ball.vx += gamma * 0.05;
@@ -215,8 +221,8 @@ function update() {
     ball.vy *= 0.98;
 
 
-    ball.x += ball.vx * 0.1;
-    ball.y += ball.vy * 0.1;
+    ball.x += ball.vx * 6 * dt;
+    ball.y += ball.vy * 6 * dt;
 
     // boundary collision
     if (ball.x - ball.radius < 0 || ball.x + ball.radius > width) {
@@ -229,14 +235,27 @@ function update() {
     }
 
     // nqtural's stupid good idea
-    // if (coins.length >= 10) {}
-      for (let i = 0; i < coins.length; i++) {
-        coins[i].c_dx = ball.x - coins[i].cx;
-        coins[i].c_dy = ball.y - coins[i].cy;
-
-        coins[i].cx += coins[i].c_dx * (coins[i].c_speed);
-        coins[i].cy += coins[i].c_dy * (coins[i].c_speed);
-      }
+    for (let i = 0; i < coins.length; i++) {
+      const c = coins[i];
+    
+      // Direction to ball
+      c.c_dx = ball.x - c.cx;
+      c.c_dy = ball.y - c.cy;
+    
+      const len = Math.hypot(c.c_dx, c.c_dy) || 1;
+    
+      // Constant-speed homing in px/s
+      const ux = c.c_dx / len;
+      const uy = c.c_dy / len;
+    
+      // Instant velocity toward the player
+      c.vel.x = ux * c.c_speed;
+      c.vel.y = uy * c.c_speed;
+    
+      // Integrate with dt
+      c.cx += c.vel.x * dt;
+      c.cy += c.vel.y * dt;
+    }
 
 
     //pc support
@@ -339,10 +358,11 @@ function draw() {
 
 
 
-function loop() {
-  update();
+function loop(now = performance.now()) {
+  const dt = Math.min(0.033, (now - lastTime) / 1000);
+  lastTime = now;
+  update(dt);
   draw();
   requestAnimationFrame(loop);
 }
 loop();
-
