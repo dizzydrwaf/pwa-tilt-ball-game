@@ -1,26 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tilt Ball PWA</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="styles/my-style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tilt Ball PWA</title>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="stylesheet" href="./styles/my-style.css">
+  </head>
+  <body>
     <main>
-        <h1>Tilt</h1>
-        <div class="btnBox">
-        <button id="restartbtn"><img alt="restart button" src="restart_v4.svg" class="restartbtn_img"></button>
-        </div>
-        <canvas id="gameCanvas" role="img" aria-label="game window"></canvas>
-
-      </main>
-      <footer>
-        <script src="script.js"></script>
-        <link rel="service worker" href="/sw.js"/>
-        <link rel="service worker" href="/service-worker.js"/>
+      <h1>Tilt</h1>
+      <button id="restartbtn">
+        <img alt="restart button" src="./restart_v4.svg" class="restartbtn_img">
+      </button>
+      <canvas id="gameCanvas" role="img" aria-label="game window"></canvas>
+    </main>
+    <footer>
+      <script src="./script.js"></script>
+      <script src="./install-service-worker.js"></script>
+      <script src="./service-worker.js"></script>
     </footer>
-</body>
+  </body>
 </html>
-
