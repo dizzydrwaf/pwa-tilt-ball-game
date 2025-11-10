@@ -74,6 +74,7 @@ const keys = {};
 
 window.addEventListener('keydown', (event) => {
   keys[event.key] = true;
+  // console.log(keys)
 });
 
 window.addEventListener('keyup', (event) => {
@@ -102,7 +103,10 @@ function spawncoin() {
     c_size: 15,
     c_life_time: 0,
     color: 'gold',
-    shadow_color: 'gold'
+    shadow_color: 'gold',
+    c_dx: 0,
+    c_dy: 0,
+    c_speed: Math.random() * (0.02 - 0.01) - 0.01
   };
   const min_d = 50;
 
@@ -112,8 +116,13 @@ function spawncoin() {
   }
 }
 
-// coin spawn timer
+// score multipliur
+
+let score_multiplier = 1;
+
+// coin spawn timer and other timeers 
 setInterval(spawncoin, 500);
+
 
 
 
@@ -129,6 +138,7 @@ function player_goes_pouf() {
       radius: Math.random() * 5 + 2, 
       color: "red"
     });
+    game_paused = true;
   }
 
   ball.visible = false;
@@ -165,6 +175,7 @@ function restartGame() {
   coins = [];
   particles = [];
   restartbtn.classList.remove("visible");
+  game_paused = false;
   // console.log("restarting game!")
 }
 
@@ -180,69 +191,89 @@ restartbtn.addEventListener("touchstart", restartGame)
   restartbtn.classList.remove("visible");
 
 
+let game_paused = false
 
 
 
 
 
 function update() {
+  if (game_paused == false ) {
+    // simple physics
+    ball.vx += gamma * 0.05;
+    ball.vy += beta * 0.05;
 
-  // simple physics
-  ball.vx += gamma * 0.05;
-  ball.vy += beta * 0.05;
-
-  // friction
-  ball.vx *= 0.98;
-  ball.vy *= 0.98;
-
-  ball.x += ball.vx * 0.1;
-  ball.y += ball.vy * 0.1;
-
-  // boundary collision
-  if (ball.x - ball.radius < 0 || ball.x + ball.radius > width) {
-    ball.vx *= -0.7;
-    ball.x = Math.max(ball.radius, Math.min(width - ball.radius, ball.x));
-  }
-  if (ball.y - ball.radius < 0 || ball.y + ball.radius > height) {
-    ball.vy *= -0.7;
-    ball.y = Math.max(ball.radius, Math.min(height - ball.radius, ball.y));
-  }
-
-  //pc support
-
-  if (keys["ArrowLeft"])  ball.vx -= 1.25;
-  if (keys["ArrowRight"]) ball.vx += 1.25;
-  if (keys["ArrowUp"])    ball.vy -= 1.25;
-  if (keys["ArrowDown"])  ball.vy += 1.25;
+    // friction
+    ball.vx *= 0.98;
+    ball.vy *= 0.98;
 
 
-  const maxSpeed = 1000;
-  ball.vx = Math.max(-maxSpeed, Math.min(maxSpeed, ball.vx));
-  ball.vy = Math.max(-maxSpeed, Math.min(maxSpeed, ball.vy));
+    ball.x += ball.vx * 0.1;
+    ball.y += ball.vy * 0.1;
+
+    // boundary collision
+    if (ball.x - ball.radius < 0 || ball.x + ball.radius > width) {
+      ball.vx *= -0.7;
+      ball.x = Math.max(ball.radius, Math.min(width - ball.radius, ball.x));
+    }
+    if (ball.y - ball.radius < 0 || ball.y + ball.radius > height) {
+      ball.vy *= -0.7;
+      ball.y = Math.max(ball.radius, Math.min(height - ball.radius, ball.y));
+    }
+
+    // nqtural's stupid good idea
+    // if (coins.length >= 10) {}
+      for (let i = 0; i < coins.length; i++) {
+        coins[i].c_dx = ball.x - coins[i].cx;
+        coins[i].c_dy = ball.y - coins[i].cy;
+
+        coins[i].cx += coins[i].c_dx * (coins[i].c_speed * -1);
+        coins[i].cy += coins[i].c_dy * (coins[i].c_speed * -1);
+      }
+
+
+    //pc support
+
+    if (keys["ArrowLeft"])  ball.vx -= 1.75;
+    if (keys["ArrowRight"]) ball.vx += 1.75;
+    if (keys["ArrowUp"])    ball.vy -= 1.75;
+    if (keys["ArrowDown"])  ball.vy += 1.75;
+    if (keys["a"]) ball.vx -= 1.75
+    if (keys["d"]) ball.vx += 1.75
+    if (keys["w"]) ball.vy -= 1.75
+    if (keys["s"]) ball.vy += 1.75
+    if (keys[" "]) restartGame();
+
+
+    const maxSpeed = 2000;
+    ball.vx = Math.max(-maxSpeed, Math.min(maxSpeed, ball.vx));
+    ball.vy = Math.max(-maxSpeed, Math.min(maxSpeed, ball.vy));
 
 
 
-  // checking if player is bad at the game
-  
-  for (let i = 0; i < coins.length; i++) {
-    if(touching(ball, coins[i], "no")) {
-      player_goes_pouf();
-      coins.splice(i, 1);
-      break;
+    // checking if player is bad at the game
+    
+    for (let i = 0; i < coins.length; i++) {
+      if(touching(ball, coins[i], "no")) {
+        player_goes_pouf();
+        coins.splice(i, 1);
+        break;
+      }
+    }
+
+    // cheching for if coin is too old to live and need to be replaced
+
+    for (let i = 0; i < coins.length; i++) {
+      if (coins[i].c_life_time == 500) {
+        coins.splice(i, 1);
+      }else {
+        coins[i].c_life_time++
+      }
+      // console.log(coins[0].c_life_time)
     }
   }
-
-  // cheching for if coin is too old to live and need to be replaced
-
-  for (let i = 0; i < coins.length; i++) {
-    if (coins[i].c_life_time == 500) {
-      coins.splice(i, 1);
-    }else {
-      coins[i].c_life_time++
-    }
-    // console.log(coins[0].c_life_time)
-  }
-
+  if (keys[" "]) restartGame();
+  console.log(game_paused)
 }
 
 function draw() {
