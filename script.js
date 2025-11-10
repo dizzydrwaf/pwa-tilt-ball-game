@@ -273,8 +273,11 @@ function update() {
     for (let i = 0; i < coins.length; i++) {
       if (coins[i].c_life_time == 250) {
         coins.splice(i, 1);
-      }else {
+      } else {
         coins[i].c_life_time++
+      }
+      if (coins[i].c_life_time >= 245) {
+        coins[i].color = `lch(from gold l c h / ${100 - ((coins[i].c_life_time - 245) * 20)}%)`;
       }
       // console.log(coins[0].c_life_time)
     }
@@ -304,7 +307,7 @@ function draw() {
 
  for (let coin of coins) {
   
-  ctx.fillStyle = 'gold';
+  ctx.fillStyle = coin.color;
   ctx.shadowColor = coin.shadow_color
   ctx.beginPath();
   ctx.arc(coin.cx, coin.cy, coin.c_size, 0, Math.PI * 2);
