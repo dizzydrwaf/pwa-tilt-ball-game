@@ -113,7 +113,7 @@ function spawncoin() {
   };
   const min_d = 200;
 
-	console.log(coin.speed);
+	// console.log(coin.speed);
 
   let distance = touching(ball, coin, "yes")
   if (distance > min_d) {
@@ -134,7 +134,7 @@ function spawnmulti() {
   if (multis.length >= max_multis) {
     return
   }
-  console.log("hello!")
+  // console.log("hello!")
 
   const green = {
     x: Math.random() * (canvas.width - 20),
@@ -153,7 +153,7 @@ function spawnmulti() {
   if (distance > min_d) {
     multis.push(green);
   }
-  console.log(multis)
+  // console.log(multis)
 }
 
 
@@ -334,10 +334,22 @@ function update(dt) {
         coins[i].life_time++
       }
       if (coins[i].life_time >= 245) {
-        coins[i].color = `lch(from gold l c h / ${100 - ((coins[i].life_time - 245) * 20)}%)`;
+        coins[i].color = `lch(from ${coins[i].color} l c h / ${100 - ((coins[i].life_time - 245) * 20)}%)`;
       }
-      // console.log(coins[0].life_time)
     }
+
+    for (let i = 0; i < multis.length; i++) {
+      if (multis[i].life_time == 250) {
+        multis.splice(i, 1);
+      } else {
+        multis[i].life_time++
+      }
+      if (multis[i].life_time >= 245) {
+        multis[i].color = `lch(from ${multis[i].color} l c h / ${100 - ((coins[i].life_time - 245) * 20)}%)`;
+      }
+    }
+    // console.log(coins[0].life_time)
+    
     score ++
     score_display.textContent = score;
   }
