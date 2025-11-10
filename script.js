@@ -106,7 +106,7 @@ function spawncoin() {
     shadow_color: 'gold',
     c_dx: 0,
     c_dy: 0,
-    c_speed: Math.random() * (0.02 - 0.01) - 0.01
+    c_speed: Math.random() * (0.02 - 0.01) + 0.01
   };
   const min_d = 50;
 
@@ -120,8 +120,10 @@ function spawncoin() {
 
 let score_multiplier = 1;
 
+let score
+
 // coin spawn timer and other timeers 
-setInterval(spawncoin, 500);
+setInterval(spawncoin, 400);
 
 
 
@@ -187,8 +189,8 @@ restartbtn.addEventListener("touchstart", restartGame)
 
 
 
-  // hides restart btn
-  restartbtn.classList.remove("visible");
+// hides restart btn
+restartbtn.classList.remove("visible");
 
 
 let game_paused = false
@@ -227,8 +229,8 @@ function update() {
         coins[i].c_dx = ball.x - coins[i].cx;
         coins[i].c_dy = ball.y - coins[i].cy;
 
-        coins[i].cx += coins[i].c_dx * (coins[i].c_speed * -1);
-        coins[i].cy += coins[i].c_dy * (coins[i].c_speed * -1);
+        coins[i].cx += coins[i].c_dx * (coins[i].c_speed);
+        coins[i].cy += coins[i].c_dy * (coins[i].c_speed);
       }
 
 
@@ -264,7 +266,7 @@ function update() {
     // cheching for if coin is too old to live and need to be replaced
 
     for (let i = 0; i < coins.length; i++) {
-      if (coins[i].c_life_time == 500) {
+      if (coins[i].c_life_time == 250) {
         coins.splice(i, 1);
       }else {
         coins[i].c_life_time++
