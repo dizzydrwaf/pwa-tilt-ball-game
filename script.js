@@ -142,7 +142,7 @@ function player_goes_pouf() {
   }
 
   ball.visible = false;
-  restartbtn.style.display = "block";
+  restartbtn.classList.add("visible");
 }
 
 
@@ -174,7 +174,7 @@ function restartGame() {
   ball.visible = true;
   coins = [];
   particles = [];
-  restartbtn.style.display = "none";
+  restartbtn.classList.remove("visible");
   game_paused = false;
   // console.log("restarting game!")
 }
@@ -188,7 +188,7 @@ restartbtn.addEventListener("touchstart", restartGame)
 
 
   // hides restart btn
-  restartbtn.style.display = "none";
+  restartbtn.classList.remove("visible");
 
 
 let game_paused = false
