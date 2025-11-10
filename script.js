@@ -218,6 +218,7 @@ function restartGame() {
   ball.vy = 0;
   ball.visible = true;
   coins = [];
+  multis = [];
   particles = [];
   restartbtn.classList.remove("visible");
   game_paused = false;
