@@ -174,6 +174,8 @@ let score_multiplier = 1;
 
 let score = 0;
 
+let score_interval = 0;
+
 // coin spawn timer and other timeers 
 setInterval(spawncoin, 400);
 
@@ -244,7 +246,7 @@ function restartGame() {
   restartbtn.classList.remove("visible");
   game_paused = false;
   score = 0;
-  score_multiplier = 0;
+  score_multiplier = 1;
   // console.log("restarting game!")
 }
 
@@ -346,7 +348,16 @@ function update(dt) {
         break;
       }
     }
+    
+    // checking if player is picking up greens
 
+    for (let i = 0; i < multis.length; i++) {
+      if(touching(ball, multis[i], "no")) {
+        score_multiplier -= 0.05;
+        multis.splice(i, 1);
+        break;
+      }
+    }
     // cheching for if coin is too old to live and need to be replaced
 
     for (let i = 0; i < coins.length; i++) {
@@ -372,7 +383,15 @@ function update(dt) {
     }
     // console.log(coins[0].life_time)
     
-    score ++
+    // cal score
+
+    if (score_interval >= 1 * score_multiplier) {
+      score += 1;
+      score_interval = 0;
+    } else {
+      score_interval += dt;
+      console.log(score_interval)
+    }
     score_display.textContent = score;
   }
   if (keys[" "]) restartGame();
