@@ -45,6 +45,7 @@ function resize() {
   height = canvas.height = window.innerHeight;
   ball.x = width / 2;
   ball.y = height / 2;
+  console.log(width, height);
 }
 window.addEventListener('resize', resize);
 resize();
@@ -76,7 +77,7 @@ const keys = {};
 
 window.addEventListener('keydown', (event) => {
   keys[event.key] = true;
-  // console.log(keys)
+  
 });
 
 window.addEventListener('keyup', (event) => {
@@ -90,14 +91,24 @@ let coins = [];
 
 let a_coin = 0;
 
-let max_coins = 10;
+// let max_coins = 10;
+
+function getMaxCoins() {
+  return width <= 500 ? 5 : 10;
+}
 
 // im bind so here is spawing coin here so stop looking for it ut looking at it
 
 function spawncoin() {
-  if (coins.length >= max_coins) {
+
+  const max = getMaxCoins();
+
+  if (coins.length >= max) {
     return
   }
+
+
+  console.log(width)
 
   const coin = {
     x: Math.random() * (canvas.width - 20),
@@ -111,7 +122,7 @@ function spawncoin() {
     speed: Math.random() * 50 + 100,
     vel: { x: 0, y: 0 },
   };
-  const min_d = 200;
+  const min_d = 100;
 
 	// console.log(coin.speed);
 
@@ -209,6 +220,16 @@ function touching(player, coin, yes_or_no) {
 
 let particles = [];
 
+// game pause toggle funcstion
+
+function pauseGameToggle() {
+  if (game_paused == false){
+    game_paused = true;
+  } else if (game_paused == true) {
+    game_paused = false;
+  }
+}
+
 // restart btn here under this comment, yes under. YES UNDER. YEEEESSSS U N D E R.
 
 function restartGame() {
@@ -250,6 +271,7 @@ const score_display = document.getElementById("scoreDisplay");
 
 function update(dt) {
   if (game_paused == false ) {
+    // console.log(keys);
     // simple physics
     ball.vx += gamma * 0.05;
     ball.vy += beta * 0.05;
@@ -328,24 +350,24 @@ function update(dt) {
     // cheching for if coin is too old to live and need to be replaced
 
     for (let i = 0; i < coins.length; i++) {
-      if (coins[i].life_time == 250) {
+
+      coins[i].life_time += dt;
+      
+      if (coins[i].life_time >= 5) {
         coins.splice(i, 1);
-      } else {
-        coins[i].life_time++
-      }
-      if (coins[i].life_time >= 245) {
-        coins[i].color = `lch(from ${coins[i].color} l c h / ${100 - ((coins[i].life_time - 245) * 20)}%)`;
+      } else if (coins[i].life_time >= 4.9) { 
+        const fade = Math.max(0, 1 - (coins[i].life_time - 4.9) / 0.1);
+        coins[i].color = `lch(from ${coins[i].color} l c h / ${fade * 100}%)`;
       }
     }
-
+    
     for (let i = 0; i < multis.length; i++) {
-      if (multis[i].life_time == 250) {
+      multis[i].life_time += dt;
+      if (multis[i].life_time >= 5) {
         multis.splice(i, 1);
-      } else {
-        multis[i].life_time++
-      }
-      if (multis[i].life_time >= 245) {
-        multis[i].color = `lch(from ${multis[i].color} l c h / ${100 - ((coins[i].life_time - 245) * 20)}%)`;
+      } else if (multis[i].life_time >= 4.9) {
+        const fade = Math.max(0, 1 - (multis[i].life_time - 4.9) / 0.1);
+        multis[i].color = `lch(from ${multis[i].color} l c h / ${fade * 100}%)`;
       }
     }
     // console.log(coins[0].life_time)
@@ -354,7 +376,8 @@ function update(dt) {
     score_display.textContent = score;
   }
   if (keys[" "]) restartGame();
-  // console.log(game_paused)
+  // if (keys["Escape"]) pauseGameToggle();
+  // console.log(game_paused);
 }
 
 function draw() {
@@ -420,6 +443,7 @@ function draw() {
 
 function loop(now = performance.now()) {
   const dt = Math.min(0.033, (now - lastTime) / 1000);
+  // console.log(dt, "this is dt")
   lastTime = now;
   update(dt);
   draw();
