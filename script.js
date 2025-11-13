@@ -111,8 +111,8 @@ function spawncoin() {
   console.log(width)
 
   const coin = {
-    x: Math.random() * (canvas.width - 20),
-    y: Math.random() * (canvas.height - 20),
+    x: 0,
+    y: 0,
     size: 15,
     life_time: 0,
     color: 'gold',
@@ -122,6 +122,28 @@ function spawncoin() {
     speed: Math.random() * 50 + 100,
     vel: { x: 0, y: 0 },
   };
+
+  const side = Math.floor(Math.random() * 4);
+
+  switch (side) {
+    case 0:
+      coin.x = Math.random() * canvas.width;
+      coin.y = -20;
+      break;
+    case 1: 
+      coin.x = canvas.width + 20;
+      coin.y = Math.random() * canvas.height;
+      break;
+    case 2:
+      coin.x = Math.random() * canvas.width;
+      coin.y = canvas.height + 20;
+      break;
+    case 3: 
+      coin.x = -20;
+      coin.y = Math.random() * canvas.height;
+      break;
+  }
+
   const min_d = 100;
 
 	// console.log(coin.speed);
@@ -267,6 +289,10 @@ let game_paused = false
 // score declaration
 const score_display = document.getElementById("scoreDisplay");
 
+// max life time for coins/greens
+
+let max_life_time_coin = 10;
+let max_life_time_green = 5;
 
 
 
@@ -364,10 +390,10 @@ function update(dt) {
 
       coins[i].life_time += dt;
       
-      if (coins[i].life_time >= 5) {
+      if (coins[i].life_time >= 10) {
         coins.splice(i, 1);
-      } else if (coins[i].life_time >= 4.9) { 
-        const fade = Math.max(0, 1 - (coins[i].life_time - 4.9) / 0.1);
+      } else if (coins[i].life_time >= 9.9) { 
+        const fade = Math.max(0, 1 - (coins[i].life_time - 9.9) / 0.1);
         coins[i].color = `lch(from ${coins[i].color} l c h / ${fade * 100}%)`;
       }
     }
