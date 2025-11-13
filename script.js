@@ -390,20 +390,20 @@ function update(dt) {
 
       coins[i].life_time += dt;
       
-      if (coins[i].life_time >= 10) {
+      if (coins[i].life_time >= max_life_time_coin) {
         coins.splice(i, 1);
-      } else if (coins[i].life_time >= 9.9) { 
-        const fade = Math.max(0, 1 - (coins[i].life_time - 9.9) / 0.1);
+      } else if (coins[i].life_time >= (max_life_time_coin - 0.1)) { 
+        const fade = Math.max(0, 1 - (coins[i].life_time - (max_life_time_coin - 0.1)) / 0.1);
         coins[i].color = `lch(from ${coins[i].color} l c h / ${fade * 100}%)`;
       }
     }
     
     for (let i = 0; i < multis.length; i++) {
       multis[i].life_time += dt;
-      if (multis[i].life_time >= 5) {
+      if (multis[i].life_time >= max_life_time_green) {
         multis.splice(i, 1);
-      } else if (multis[i].life_time >= 4.9) {
-        const fade = Math.max(0, 1 - (multis[i].life_time - 4.9) / 0.1);
+      } else if (multis[i].life_time >= (max_life_time_green - 0.1)) {
+        const fade = Math.max(0, 1 - (multis[i].life_time - (max_life_time_green - 0.1)) / 0.1);
         multis[i].color = `lch(from ${multis[i].color} l c h / ${fade * 100}%)`;
       }
     }
