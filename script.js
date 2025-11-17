@@ -115,7 +115,7 @@ function spawncoin() {
   }
 
 
-  console.log(width)
+  // console.log(width)
 
   const coin = {
     x: 0,
@@ -434,7 +434,7 @@ function update(dt) {
 
     if (score_interval >= 1 * score_multiplier) {
       score += 1;
-      score_interval = 0;
+      score_interval -= 1 * score_multiplier;
     } else {
       score_interval += dt;
       // console.log(score_interval)
