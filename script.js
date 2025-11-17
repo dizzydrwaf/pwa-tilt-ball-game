@@ -90,8 +90,10 @@ window.addEventListener('keyup', (event) => {
 // coin
 
 let coins = [];
-
 let a_coin = 0;
+const coin_color = "yellow";
+
+const green_color = "green";
 
 // let max_coins = 10;
 
@@ -400,30 +402,33 @@ function update(dt) {
         break;
       }
     }
-    // cheching for if coin is too old to live and need to be replaced
 
-    for (let i = 0; i < coins.length; i++) {
-
-      coins[i].life_time += dt;
+    // update coins' colors
+    for (const coin of coins) {
+      coin.life_time += dt;
       
-      if (coins[i].life_time >= max_life_time_coin) {
-        coins.splice(i, 1);
-      } else if (coins[i].life_time >= (max_life_time_coin - 0.1)) { 
-        const fade = Math.max(0, 1 - (coins[i].life_time - (max_life_time_coin - 0.1)) / 0.1);
-        coins[i].color = `lch(from ${coins[i].color} l c h / ${fade * 100}%)`;
+      if (coin.life_time >= (max_life_time_coin - 0.1)) { 
+        const fade = Math.max(0, 1 - (coin.life_time - (max_life_time_coin - 0.1)) / 0.1);
+        coin.color = `lch(from ${coin_color} l c h / ${fade * 100}%)`;
       }
     }
-    
-    for (let i = 0; i < multis.length; i++) {
-      multis[i].life_time += dt;
-      if (multis[i].life_time >= max_life_time_green) {
-        multis.splice(i, 1);
-      } else if (multis[i].life_time >= (max_life_time_green - 0.1)) {
-        const fade = Math.max(0, 1 - (multis[i].life_time - (max_life_time_green - 0.1)) / 0.1);
-        multis[i].color = `lch(from ${multis[i].color} l c h / ${fade * 100}%)`;
+
+    // update multipliers' colors
+    for (const multi of multis) {
+      multi.life_time += dt;
+      if (multi.life_time <= 0.1) {
+        const fade = multi.life_time / 0.1;
+        multi.color = `lch(from ${green_color} l c h / ${fade * 100}%`;
+      } else if (multi.life_time >= (max_life_time_green - 0.1)) {
+        const fade = Math.max(0, 1 - (multi.life_time - (max_life_time_green - 0.1)) / 0.1);
+        multi.color = `lch(from ${green_color} l c h / ${fade * 100}%)`;
       }
     }
-    // console.log(coins[0].life_time)
+
+    // remove unalive coins
+    coins = coins.filter(coin => coin.life_time < max_life_time_coin);
+    // remove unalive multipliers
+    multis = multis.filter(multi => multi.life_time < max_life_time_green);
     
     // cal score
 
@@ -433,7 +438,7 @@ function update(dt) {
     } else {
       score_interval += dt;
       // console.log(score_interval)
-      console.log("score multiplier: ",score_multiplier)
+      // console.log("score multiplier: ",score_multiplier)
     }
     score_display.textContent = score;
   }
